@@ -1,0 +1,79 @@
+// registers (8 bit/RW) R0-R8 - registers
+// (8 bit/RO) PX - pos x, PY - pos y
+
+// Initializaton
+	set(R0, 5)
+	set(R3, 0)
+	copy(R3,R4)
+	// add(R3, 10)
+	// sub(R3, 2)
+	// if(R3 >= 2) goto(revers)
+	// if(R3 == 1) call(fire)
+	// if(R3 < 8) dec(R3, 1)
+	set_step_detector(5)
+
+start:
+	do_steps(1)
+
+	if (R3) goto(revers)
+	turn_right
+	radar_ping
+	turn_left
+	goto start
+	
+revers:		
+	turn_left
+	radar_ping
+	turn_right
+
+	call(proc_fire)
+	
+	goto(start)
+
+//========== procedures ============
+	
+proc_fire:
+	dec(R0, 1)
+	if(R0) goto(fire_out)
+
+	R5 = 4
+fire_1:
+	rocket_lunch
+	turn_right
+	dec(R5, 1)
+	if(R5) goto(fire_1)
+fire_out:
+	return
+
+end
+	
+@rocket_detector:
+//	turn_left
+//	do_step(1);
+	return
+@end
+
+@robot_detector:
+	fire_rocket
+	return
+@end
+
+@wall_detector:
+	toggle(R3)
+	if(R3) goto(wd_down)
+	turn_right
+	do_step(2)
+	turn_right
+	return
+wd_down:
+	turn_left
+	do_step(2)
+	turn_left
+	return
+@end
+
+@step_count_detector:
+	rocket_lunch
+	set_step_detector(5)
+	return
+@end

@@ -1,0 +1,31 @@
+$begin
+	turn_right
+	do_step
+	turn_left
+start:
+	do_step
+	turn_right
+	radar_ping
+	turn_left
+	goto start
+	fire_rocket
+$end
+	
+@radar_rocket_detector:
+	turn_left
+	do_step
+	turn_right
+@end
+
+@radar_robot_detector:
+	fire_rocket
+@end
+
+@wall_detector:
+	turn_right
+	turn_right
+@end
+
+@step_count_detector:
+	fire_rocket
+@end

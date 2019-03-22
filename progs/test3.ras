@@ -1,0 +1,47 @@
+start:
+	set R1, 5
+loop1:
+	rocket
+	step
+	djmpnz R1, loop1
+	set R1, 5
+loop2:
+	rocket
+	step
+	djmpnz R1, loop2
+rotate:
+	turnl
+	rocket
+	radar
+	rnd R7
+	and R7, 1
+	djmpz R7, notmove
+	bomb
+	step
+notmove:
+	turnl
+	rocket
+	jmp rotate
+	
+$WALL:
+	turnl
+	turnl
+	ret
+
+$ROCKET:
+	rocket
+	rocket
+	ret
+
+$ROBOT:
+	#rocket
+	#rocket
+	rocket
+	#radar
+	ret
+
+$STEP:
+	sstep 10
+	bomb
+	ret
+

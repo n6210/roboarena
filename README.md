@@ -10,4 +10,5 @@ Examples you can find in a progs directory.
 
 Have fun!
 
-![RoboArena screenshot](https://github.com/n6210/roboarena/blob/master/RoboArena.png)
+![RoboArena screenshot](https://github.com/n6210/roboarena/blob/master/screenshots/RoboArena.png)
+![RoboArena screenshot1](https://github.com/n6210/roboarena/blob/master/screenshots/Robo1.png)

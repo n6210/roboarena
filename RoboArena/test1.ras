@@ -1,0 +1,76 @@
+	
+start:
+	set R1, 9
+down:
+	step
+	djmpnz R1, down
+	
+	turnl
+	set R1, 9
+right:
+	step
+	djmpnz R1, right
+	
+loop:
+	turnl
+	step
+	turnl
+	radar
+	turnr
+	step
+	radar
+	step
+	bomb
+	jmp loop
+	
+$WALL:
+	turnr
+	radar
+	step
+	ret
+
+$ROCKET:
+	#rocket
+	bomb
+	rocket
+	radar
+	ret
+
+$ROBOT:
+	rocket
+	rocket
+	rocket
+	rocket
+	ret
+
+$STEP:
+	ret
+
+# reg: R0 - R15 (signed 32 bit)
+# val: 1234 or 0x1234 (numeric value)
+#
+# set reg, val		reg <-val
+# copy reg1, reg2	reg1 -> reg2
+# add reg, val		reg = reg + val
+# addr reg1, reg2	reg1 = reg1 + reg
+# sub reg, val		reg = reg - val
+# subr reg1, reg2	reg1 = reg1 = reg2
+# and reg, val		reg = reg & val
+# andr reg, reg2	reg = reg & reg2
+# or reg, val		reg = reg | val
+# orr reg, reg2		reg = reg | reg2
+# inv reg			reg = !reg
+# neg reg			reg = ~reg
+# jmp label
+# jmpz reg, label
+# jmpnz reg, label
+# djmpz reg, label	reg = reg - 1 and/or jump
+# djmpnz reg, label	reg = reg - 1 and/or jump
+# ret - works only in event routine
+# turnl
+# turnr
+# step
+# rocket
+# bomb
+# radar
+# sstep value

@@ -1,0 +1,61 @@
+	bomb
+	step
+	rocket
+	step
+	bomb
+	step
+	step
+	rocket
+	step
+	radar
+	bomb
+	turnl
+	step
+	step
+	#bomb
+	step
+	step
+	bomb
+	step
+	turnl
+start:
+	step
+	radar
+	step
+	radar
+	turnl
+	jmp start
+	
+$WALL:
+	bomb
+	turnl
+	turnl
+	step
+	rocket
+	radar
+	turnr
+	radar
+	turnl
+	step
+	ret
+
+$ROCKET:
+	rocket
+	radar
+	rocket
+	turnl
+	step
+	turnr
+	radar
+	ret
+
+$ROBOT:
+	#rocket
+	#rocket
+	rocket
+	radar
+	ret
+
+$STEP:
+	ret
+

@@ -1,0 +1,69 @@
+	set R0, 1	# 0 left, 1 right
+start:
+	bomb
+	set R1, 3
+loop1:
+	rocket
+	radar
+	step
+	bomb
+	turnl
+	radar
+	step
+	radar
+	turnr
+	djmpnz R1, loop1
+	jmpz R0, left
+	rocket
+	radar
+	rocket
+	jmp start
+left:
+	turnl
+	rocket
+	radar
+	turnr
+	rocket
+	jmp start
+	
+$WALL:
+	bomb
+	turnl
+	radar
+	step
+	rocket
+	radar
+	step
+	inv R0
+	ret
+
+$ROCKET:
+	rocket
+	radar
+	rocket
+	rnd R1
+	and R1, 3
+	jmpnz R0, r0
+	turnl
+	step
+	turnr
+	radar
+	ret
+r0:
+	turnr
+	radar
+	step
+	turnl
+	radar
+	ret
+
+$ROBOT:
+	rocket
+	rocket
+	rocket
+	radar
+	ret
+
+$STEP:
+	ret
+

@@ -29,7 +29,7 @@ char *rComS[] = { "C_NOOP", "C_TURN_L", "C_TURN_R", "C_STEP", "C_ROCKET", "C_RAD
 char *rEventS[] = { "EV_NULL", "EV_WALL", "EV_ROCKET", "EV_ROBOT", "EV_STEP" };
 
 struct compileErr *cErr;
-char err_msg[60];
+char err_msg[64];
 
 struct Labels {
 	char label[32];

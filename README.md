@@ -12,3 +12,4 @@ Have fun!
 
 ![RoboArena screenshot](https://github.com/n6210/roboarena/blob/master/screenshots/RoboArena.png)
 ![RoboArena screenshot1](https://github.com/n6210/roboarena/blob/master/screenshots/Robo1.png)
+![RoboArena screenshot2](https://github.com/n6210/roboarena/blob/master/screenshots/Robo2.png)

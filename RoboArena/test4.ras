@@ -1,4 +1,4 @@
-	step
+	sstep 5
 	step
 	step
 start:
@@ -29,7 +29,7 @@ $ROBOT:
 	radar
 	ret
 
-#$STEP:
+$STEP:
 	rocket
-	sstep 3
+	sstep 5
 	ret

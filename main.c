@@ -30,21 +30,13 @@ struct compileErr comErr;
 
 SDL_Surface *screen = NULL;
 SDL_Surface *bg = NULL;
-SDL_Surface *robo1 = NULL;
-SDL_Surface *robo2 = NULL;
-SDL_Surface *robo3 = NULL;
-SDL_Surface *robo4 = NULL;
+SDL_Surface *robo[4] = {NULL, NULL, NULL, NULL};
 SDL_Surface *rocket = NULL;
-SDL_Surface *bomb1 = NULL;
-SDL_Surface *bomb2 = NULL;
-SDL_Surface *bomb3 = NULL;
-SDL_Surface *bomb4 = NULL;
+SDL_Surface *bomb[4] = {NULL, NULL, NULL, NULL};
 SDL_Surface *bombicon = NULL;
 SDL_Surface *explosion = NULL;
-SDL_Surface *radar = NULL;
-SDL_Surface *radar2 = NULL;
-SDL_Surface *shield = NULL;
-SDL_Surface *shield2 = NULL;
+SDL_Surface *radar[2] = {NULL, NULL};
+SDL_Surface *shield[2] = {NULL, NULL};
 
 int fantom;
 int rob[MAX_ROBOTS];
@@ -140,7 +132,7 @@ int getFreeRadar(void)
 	{
 		if (!sprite[rad[i]].visible)
 		{
-			sprite[rad[i]].img = radar;
+			sprite[rad[i]].img = radar[0];
 			return (rad[i]);
 		}
 	}
@@ -169,7 +161,7 @@ int getFreeShield(void)
 	{
 		if (!sprite[shi[i]].visible)
 		{
-			sprite[shi[i]].img = shield;
+			sprite[shi[i]].img = shield[0];
 			return (shi[i]);
 		}
 	}
@@ -594,7 +586,7 @@ int startRadarByRobo(int robot_nr)
 int putBombByRobo(int robot_nr)
 {
 	int robn = rob[robot_nr];
-	int bomb, i, x, y;
+	int bomb_cnt, i, x, y;
 
 	if (!sprite[robn].visible || !sprite[robn].bomb)
 			return (-1);
@@ -611,25 +603,19 @@ int putBombByRobo(int robot_nr)
 		}
 	}
 
-	bomb = getFreeBomb();
-	if (!bomb)
+	bomb_cnt = getFreeBomb();
+	if (!bomb_cnt)
 			return (-1);
 
 	sprite[robn].bomb--;
 	results_update = TRUE;
 
-	sprite[bomb].visible = TRUE;
-	sprite[bomb].x = sprite[robn].x;
-	sprite[bomb].y = sprite[robn].y;
-	sprite[bomb].owner = robn;
+	sprite[bomb_cnt].visible = TRUE;
+	sprite[bomb_cnt].x = sprite[robn].x;
+	sprite[bomb_cnt].y = sprite[robn].y;
+	sprite[bomb_cnt].owner = robn;
 
-	switch (robot_nr)
-	{
-	case 0: sprite[bomb].img = bomb1; break;
-	case 1: sprite[bomb].img = bomb2; break;
-	case 2: sprite[bomb].img = bomb3; break;
-	case 3: sprite[bomb].img = bomb4; break;
-	}
+	sprite[bomb_cnt].img = bomb[robot_nr];
 
 	//if (cfg.fx_play)
 	//		Mix_PlayChannel(-1, bompsnd, 0);
@@ -713,7 +699,7 @@ int do_logic(void)
 				{
 					if ((cycle % sprite[i].adiv) == 0)
 					{
-						sprite[i].img = shield2;
+						sprite[i].img = shield[1];
 						sprite[i].dir++;
 						if (sprite[i].dir > 5)
 							sprite[i].dir = 0;
@@ -905,7 +891,7 @@ int do_logic(void)
 			if (sprite[i].echowith)
 			{
 				sprite[i].dir = direv[sprite[i].dir];
-				sprite[i].img = radar2;
+				sprite[i].img = radar[1];
 
 				if (sprite[i].dx) {
 					sprite[i].dx = (RADAR_RANGE - SPRITE_SIZE) - sprite[i].dx;
@@ -1518,25 +1504,25 @@ int main (int argc, char * args[])
 	memset(sprite, 0, sizeof(sprite));
 
 	bg = LoadSprite("res/background2.png", 255);
-	robo1 = LoadSprite("res/robo1r.png", 255);
-	robo2 = LoadSprite("res/robo2r.png", 255);
-	robo3 = LoadSprite("res/robo3r.png", 255);
-	robo4 = LoadSprite("res/robo4r.png", 255);
+	robo[0] = LoadSprite("res/robo1r.png", 255);
+	robo[1] = LoadSprite("res/robo2r.png", 255);
+	robo[2] = LoadSprite("res/robo3r.png", 255);
+	robo[3] = LoadSprite("res/robo4r.png", 255);
 	rocket = LoadSprite("res/rocket.png", 255);
 	explosion= LoadSprite("res/explosion.png", 240);
-	radar = LoadSprite("res/radar1.png", 190);
-	radar2 = LoadSprite("res/radar2.png",180);
+	radar[0] = LoadSprite("res/radar1.png", 190);
+	radar[1] = LoadSprite("res/radar2.png",180);
 	bombicon = LoadSprite("res/bombico.png", 200);
-	bomb1 = LoadSprite("res/bomb1.png", 255);
-	bomb2 = LoadSprite("res/bomb2.png", 255);
-	bomb3 = LoadSprite("res/bomb3.png", 255);
-	bomb4 = LoadSprite("res/bomb4.png", 255);
-	shield = LoadSprite("res/shields.png", 200);
-	shield2 = LoadSprite("res/shields2.png", 200);
+	bomb[0] = LoadSprite("res/bomb1.png", 255);
+	bomb[1] = LoadSprite("res/bomb2.png", 255);
+	bomb[2] = LoadSprite("res/bomb3.png", 255);
+	bomb[3] = LoadSprite("res/bomb4.png", 255);
+	shield[0] = LoadSprite("res/shields.png", 200);
+	shield[1] = LoadSprite("res/shields2.png", 200);
 
-	if (!bg || !robo1 || !robo2 || !robo3 || !robo4 ||
-		!rocket || !explosion || !radar || !radar2 || !bombicon ||
-		!bomb1 || !bomb2 || !bomb3 || !bomb4 || !shield)
+	if (!bg || !robo[0] || !robo[1] || !robo[2] || !robo[3] ||
+		!rocket || !explosion || !radar[0] || !radar[1] || !bombicon ||
+		!bomb[0] || !bomb[1] || !bomb[2] || !bomb[3] || !shield[0] || !shield[1])
 	{
 		printf("Unable to load one of the spirits\n");
 		return(0);
@@ -1550,17 +1536,17 @@ int main (int argc, char * args[])
 	//fantom = SetSprite(bomb, HIDDEN, 250, 250, VISIBLE, DIS_MOVE_ANIM, D); // We need grab sprite idx = 0 !!!
 
     for (i = 0; i < MAX_BOMBS; i++)
-		bom[i] = SetSprite(bomb1, HIDDEN,  0, 0, 1, 25, ENA_MOVE_ANIM, 0, BOM);
+		bom[i] = SetSprite(bomb[0], HIDDEN,  0, 0, 1, 25, ENA_MOVE_ANIM, 0, BOM);
 
-	rob[0] = SetSprite(robo1, VISIBLE,   0,   0, 1, 4, ENA_ROTATE_ANIM, D, ROB);
-	rob[1] = SetSprite(robo2, VISIBLE, 450,   0, 1, 4, ENA_ROTATE_ANIM, L, ROB);
-	rob[2] = SetSprite(robo3, VISIBLE, 450, 450, 1, 4, ENA_ROTATE_ANIM, U, ROB);
-	rob[3] = SetSprite(robo4, VISIBLE,   0, 450, 1, 4, ENA_ROTATE_ANIM, R, ROB);
+	rob[0] = SetSprite(robo[0], VISIBLE,   0,   0, 1, 4, ENA_ROTATE_ANIM, D, ROB);
+	rob[1] = SetSprite(robo[1], VISIBLE, 450,   0, 1, 4, ENA_ROTATE_ANIM, L, ROB);
+	rob[2] = SetSprite(robo[2], VISIBLE, 450, 450, 1, 4, ENA_ROTATE_ANIM, U, ROB);
+	rob[3] = SetSprite(robo[3], VISIBLE,   0, 450, 1, 4, ENA_ROTATE_ANIM, R, ROB);
 	for (i = 0; i < MAX_ROBOTS; i++)
 		sprite[rob[i]].owner = i + 1;
 
 	for (i = 0; i < MAX_SHIELD; i++)
-		shi[i] = SetSprite(shield, HIDDEN, 0, 0, 1, 5, DIS_ANIM, 0, SHI);
+		shi[i] = SetSprite(shield[0], HIDDEN, 0, 0, 1, 5, DIS_ANIM, 0, SHI);
 
 	for (i = 0; i < MAX_ROCKETS; i++)
 		roc[i] = SetSprite(rocket, HIDDEN, 0, 0, 2, 2, DIS_ANIM, 0, ROC);
@@ -1569,7 +1555,7 @@ int main (int argc, char * args[])
 		bum[i] = SetSprite(explosion, HIDDEN, 0, 0, 1, 6, OT_ANIM, 0, EXP);
 
     for (i = 0; i < MAX_RADAR; i++)
-		rad[i] = SetSprite(radar, HIDDEN,  0, 0, 4, 1, DIS_ANIM, 0, RAD); //!! speed z 3 na 4
+		rad[i] = SetSprite(radar[0], HIDDEN,  0, 0, 4, 1, DIS_ANIM, 0, RAD); //!! speed z 3 na 4
 
 
 	//---------------------------------------------------------------------------------------------------
@@ -1699,18 +1685,18 @@ int main (int argc, char * args[])
 	TTF_CloseFont(font1);
 	TTF_CloseFont(font2);
 
-	SDL_FreeSurface(robo1);
-	SDL_FreeSurface(robo2);
-	SDL_FreeSurface(robo3);
-	SDL_FreeSurface(robo4);
-	SDL_FreeSurface(bomb1);
-	SDL_FreeSurface(bomb2);
-	SDL_FreeSurface(bomb3);
-	SDL_FreeSurface(bomb4);
+	SDL_FreeSurface(robo[0]);
+	SDL_FreeSurface(robo[1]);
+	SDL_FreeSurface(robo[2]);
+	SDL_FreeSurface(robo[3]);
+	SDL_FreeSurface(bomb[0]);
+	SDL_FreeSurface(bomb[1]);
+	SDL_FreeSurface(bomb[2]);
+	SDL_FreeSurface(bomb[3]);
 	SDL_FreeSurface(rocket);
 	SDL_FreeSurface(explosion);
-	SDL_FreeSurface(radar);
-	SDL_FreeSurface(radar2);
+	SDL_FreeSurface(radar[0]);
+	SDL_FreeSurface(radar[1]);
 	SDL_FreeSurface(bg);
 
 	//SDL_FreeSurface(bombicon);

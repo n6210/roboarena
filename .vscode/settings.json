@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/taddy/Public/roboarena",
+            "binaryPath": "/home/taddy/Public/roboarena/roboarena",
+            "binaryArgs": []
+        }
+    ]
+}

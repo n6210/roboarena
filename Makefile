@@ -9,12 +9,12 @@ all: roboarena.h
 	gcc ${DBG} ${OPTS} ${FILES} -o ${PROG} ${LIBS}
 
 clean:
-	@rm ${PROG} *.o
+	@-rm ${PROG}
 
 strip:
 	@strip ${PROG}
 
-install:
+install: strip
 	cp -f ${PROG} ..
 
 

@@ -1424,7 +1424,6 @@ int prepareWorkDir(const char *hdir, char **wdir)
 int main (int argc, char * args[])
 {
 	int i, fps;
-	int progExit = 0;
 
 	status.conf = &cfg;
 	status.comErr = &comErr;
@@ -1571,13 +1570,13 @@ int main (int argc, char * args[])
 
 	//thread = SDL_CreateThread(logic_thread, NULL);
 
-	while (!progExit)
+	while (1)
 	{
 		fps = SDL_GetTicks();
 
 		while (SDL_PollEvent(&kbdEvent))
 		{
-			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q]) progExit = 1;
+			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q]) break;
 			else
 			if (keystate[SDLK_RIGHT]) ld = R;
 			else

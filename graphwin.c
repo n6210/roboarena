@@ -59,8 +59,9 @@ int drawResults(int x, int y, int dbg, int drv, int stop)
 #define R_SY2	R_SY - 10
 
 	int i, j;
-	SDL_Rect win, f, f1, f2, bi;
-	SDL_Color tc = {0, 0, 0}, tp = {255, 255, 255};
+	SDL_Rect win, fillR0, fillR1, fillR2, bombIconR;
+	SDL_Color textColor = {0, 0, 0};
+	SDL_Color pointsColor = {255, 255, 255};
 
 	Uint32 bg = SDL_MapRGB((screen)->format, 195, 165, 90);
 	Uint32 gr = SDL_MapRGB((screen)->format, 0, 200, 0);
@@ -80,56 +81,56 @@ int drawResults(int x, int y, int dbg, int drv, int stop)
 	SDL_FillRect(screen, &win, bg);
 
 	if (drv)
-		putText(win.x + 15, win.y, tc, font1, "Keyboard drives ROBO-%d", drv);
+		putText(win.x + 15, win.y, textColor, font1, "Keyboard drives ROBO-%d", drv);
 	else
 	if (dbg)
-		putText(win.x + 15, win.y, tc, font1, "DEBUG mode (spacebar = step)");
+		putText(win.x + 15, win.y, textColor, font1, "DEBUG mode (spacebar = step)");
 	else
 		if (stop == 2)
-		putText(win.x + 15, win.y, tc, font1, "STOP - press S tu run");
+		putText(win.x + 15, win.y, textColor, font1, "STOP - press S tu run");
 	else
 	if (stop == 3)
-		putText(win.x + 15, win.y, tc, font1, "STOP - COMPILATION ERROR");
+		putText(win.x + 15, win.y, textColor, font1, "STOP - COMPILATION ERROR");
 	else
-		putText(win.x + 15, win.y, tc, font1, "AUTOPLAY mode");
+		putText(win.x + 15, win.y, textColor, font1, "AUTOPLAY mode");
 
 	for (i = 0; i < MAX_ROBOTS; i++)
 	{
 		int idx = rob[i];
 		Uint32 tgr = (!sprite[idx].visible) ? SDL_MapRGB((screen)->format, 10, 10, 10) : gr;
 
-		f.x = win.x + 10;
-		f.y = win.y + OFFSET_Y + (R_SY * i);
-		f.w = OFFSET_X - 10;
-		f.h = R_SY2;
-		SDL_FillRect(screen, &f, robc[i]);
+		fillR0.x = win.x + 10;
+		fillR0.y = win.y + OFFSET_Y + (R_SY * i);
+		fillR0.w = OFFSET_X - 10;
+		fillR0.h = R_SY2;
+		SDL_FillRect(screen, &fillR0, robc[i]);
 
-		putText(win.x + 15, win.y + OFFSET_Y - 1 + (R_SY * i), tc, font1, "ROBO-%d", i+1);
+		putText(win.x + 15, win.y + OFFSET_Y - 1 + (R_SY * i), textColor, font1, "ROBO-%d", i+1);
 
-		f1.x = f.x + OFFSET_X;
-		f1.y = f.y;
-		f1.w = R_SX * sprite[idx].life;
-		f1.h = R_SY2;
-		SDL_FillRect(screen, &f1, tgr);
+		fillR1.x = fillR0.x + OFFSET_X;
+		fillR1.y = fillR0.y;
+		fillR1.w = R_SX * sprite[idx].life;
+		fillR1.h = R_SY2;
+		SDL_FillRect(screen, &fillR1, tgr);
 
 		if (MAX_LIFE - sprite[idx].life)
 		{
-			f2.x = f1.x + f1.w;
-			f2.y = f1.y;
-			f2.w = R_SX * (MAX_LIFE - sprite[idx].life);
-			f2.h = R_SY2;
-			SDL_FillRect(screen, &f2, re);
+			fillR2.x = fillR1.x + fillR1.w;
+			fillR2.y = fillR1.y;
+			fillR2.w = R_SX * (MAX_LIFE - sprite[idx].life);
+			fillR2.h = R_SY2;
+			SDL_FillRect(screen, &fillR2, re);
 		}
 
 		for (j = 0; j < sprite[idx].bomb; j++)
 		{
-			bi.x = f1.x + 103 + (14 * j);
-			bi.y = f1.y - 3;
-			SDL_BlitSurface(bombicon, NULL, screen, &bi);
+			bombIconR.x = fillR1.x + 103 + (14 * j);
+			bombIconR.y = fillR1.y - 3;
+			SDL_BlitSurface(bombicon, NULL, screen, &bombIconR);
 		}
 
-		putText(f1.x + 5, f1.y - 1, tp, font1, "%d", sprite[idx].points);
-		//putText(f1.x + 65, f1.y - 1, tp, font1, "S:%d", sprite[idx].scnt);
+		putText(fillR1.x + 5, fillR1.y - 1, pointsColor, font1, "%d", sprite[idx].points);
+		//putText(fillR1.x + 65, fillR1.y - 1, pointsColor, font1, "S:%d", sprite[idx].scnt);
 	}
 
 	printCodes(NULL, 0);
@@ -170,7 +171,7 @@ void printCodes(char *line, int reset)
 	static char lines[LNR][64];
 	static int lc[LNR];
 	Uint32 bg = SDL_MapRGB((screen)->format, 0, 0, 0);
-	SDL_Color tc[4] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {248, 161, 4}};
+	SDL_Color textColor[4] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {248, 161, 4}};
 	SDL_Rect win;
 	int ln;
 
@@ -204,7 +205,7 @@ void printCodes(char *line, int reset)
 	for (ln = 0; ln < LNR; ln++)
 	{
 		if (strlen(lines[ln]))
-			putText(win.x + 5, win.y + 2 + (16 * ln), tc[lc[ln]], font2, "%s", lines[ln]);
+			putText(win.x + 5, win.y + 2 + (16 * ln), textColor[lc[ln]], font2, "%s", lines[ln]);
 	}
 }
 
@@ -239,7 +240,7 @@ void showWinner(int nr, int tnr)
 	int idx = rob[nr - 1];
 
 	SDL_Rect fx, fx2, ip, is;
-	SDL_Color tc = {200, 0, 0};
+	SDL_Color textColor = {200, 0, 0};
 	Uint32 bo = SDL_MapRGB((screen)->format, 10, 10, 10);
 	Uint32 bg = SDL_MapRGB((screen)->format, 200, 200, 200);
 
@@ -263,10 +264,10 @@ void showWinner(int nr, int tnr)
 	is.w = is.h = 50;
 	SDL_BlitSurface(sprite[idx].img, &is, screen, &ip);
 
-	putText(fx2.x + 100, fx2.y + 10, tc, font1, "%s OVER", (tnr == 0) ? "GAME" : "TIME IS");
-	putText(fx2.x + 45,  fx2.y + 40, tc, font1, "THE WINNER IS ROBO-%d", nr);
-	putText(fx2.x + 45,  fx2.y + 70, tc, font1, "TOTAL POINTS: %d", sprite[idx].points);
-	putText(fx2.x + 45,  fx2.y + 90, tc, font1, "STEPS:%d", sprite[idx].scnt);
+	putText(fx2.x + 100, fx2.y + 10, textColor, font1, "%s OVER", (tnr == 0) ? "GAME" : "TIME IS");
+	putText(fx2.x + 45,  fx2.y + 40, textColor, font1, "THE WINNER IS ROBO-%d", nr);
+	putText(fx2.x + 45,  fx2.y + 70, textColor, font1, "TOTAL POINTS: %d", sprite[idx].points);
+	putText(fx2.x + 45,  fx2.y + 90, textColor, font1, "STEPS:%d", sprite[idx].scnt);
 
 	if ((d == R) && (++x > 260))
 		d = U;
@@ -281,7 +282,7 @@ void showWinner(int nr, int tnr)
 void showGoodbye(void)
 {
 	SDL_Rect fx, fx2;
-	SDL_Color tc = {200, 0, 0};
+	SDL_Color textColor = {200, 0, 0};
 	Uint32 bg = SDL_MapRGB((screen)->format, 200, 200, 200);
 	Uint32 bo = SDL_MapRGB((screen)->format, 250, 0, 0);
 
@@ -297,7 +298,7 @@ void showGoodbye(void)
 	fx2.h = fx.h - 50;
 	SDL_FillRect(screen, &fx2, bg);
 
-	putText(fx2.x + 45, fx2.y + 60, tc, font1, "GOODBYE, BRAVE ROBO PROGRAMMER !");
+	putText(fx2.x + 45, fx2.y + 60, textColor, font1, "GOODBYE, BRAVE ROBO PROGRAMMER !");
 }
 
 SDL_Surface * LoadSprite(char *name, Uint8 alpha)

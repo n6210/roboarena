@@ -167,7 +167,7 @@ void printCodes(char *line, int reset)
 {
 #define LNR	17
 
-	static char lines[LNR][60];
+	static char lines[LNR][64];
 	static int lc[LNR];
 	Uint32 bg = SDL_MapRGB((screen)->format, 0, 0, 0);
 	SDL_Color tc[4] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {248, 161, 4}};

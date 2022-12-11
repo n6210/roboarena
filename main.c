@@ -1380,9 +1380,13 @@ int saveCFG(const char *hdir)
 	f = creat(hd, S_IRUSR | S_IWUSR);
 	if (f > 0)
 	{
+		size_t ret = 0;
 		printf("Save config\n");
-		write(f, &cfg, sizeof(cfg));
+		ret = write(f, &cfg, sizeof(cfg));
 		close(f);
+		if (ret != sizeof(cfg)) {
+			printf("Error saving config file!");
+		}
 		return (0);
 	}
 	else
@@ -1424,6 +1428,7 @@ int prepareWorkDir(const char *hdir, char **wdir)
 int main (int argc, char * args[])
 {
 	int i, fps;
+	int progExit = 0;
 
 	status.conf = &cfg;
 	status.comErr = &comErr;
@@ -1570,13 +1575,13 @@ int main (int argc, char * args[])
 
 	//thread = SDL_CreateThread(logic_thread, NULL);
 
-	while (1)
+	while (progExit == 0)
 	{
 		fps = SDL_GetTicks();
 
 		while (SDL_PollEvent(&kbdEvent))
 		{
-			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q]) break;
+			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q]) progExit = 1;
 			else
 			if (keystate[SDLK_RIGHT]) ld = R;
 			else

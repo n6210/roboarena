@@ -222,7 +222,7 @@ int compile(char *fname)
 						{
 							if (events[x].pc)
 							{
-								sprintf(err_msg, "Duplicated event label \" $%s \"", events[x].label);
+								snprintf(err_msg, sizeof(err_msg), "Duplicated event label \" $%s \"", events[x].label);
 								goto fail;
 							}
 							
@@ -410,7 +410,7 @@ int compile(char *fname)
 							}
 							if (x == maxlab)
 							{
-								strncpy(flab[maxflab].label, s2, strlen(s2));
+								strcpy(flab[maxflab].label, s2);
 								flab[maxflab].pc = pc;
 								maxflab++;
 							}
@@ -460,7 +460,7 @@ int compile(char *fname)
 									
 									if (x == maxlab)
 									{
-										strncpy(flab[maxflab].label, l, strlen(l));
+										strcpy(flab[maxflab].label, l);
 										flab[maxflab].pc = pc;
 										maxflab++;
 									}

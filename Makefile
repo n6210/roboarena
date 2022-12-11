@@ -1,20 +1,28 @@
-OPTS := -Wall -std=gnu99
+CC ?= gcc
+
+OPTS := -Wall -std=gnu99 -O2
 DBG := -ggdb -O0
 LIBS := -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer
 
-FILES := main.c brain.c graphwin.c
+OBJS := main.o brain.o graphwin.o
 PROG := roboarena
 
-all: roboarena.h
-	gcc ${DBG} ${OPTS} ${FILES} -o ${PROG} ${LIBS}
+all: $(OBJS)
+	$(CC) ${OBJS} -o ${PROG} ${LIBS}
+
+%.o: %.c
+	$(CC) ${DBG} ${OPTS} -c $<
 
 clean:
-	@-rm ${PROG}
+	@echo "Clean project"
+	@-rm ${PROG} $(OBJS)
 
 strip:
+	@echo "Strip program"
 	@strip ${PROG}
 
 install: strip
-	cp -f ${PROG} ..
+#	@echo "Install program"
+#	cp -f ${PROG} ..
 
 

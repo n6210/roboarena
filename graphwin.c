@@ -212,7 +212,7 @@ void printCodes(char *line, int reset)
 void showMsg(char *msg1, char *msg2, char *msg3, char *msg4, Uint8 r, Uint8 g, Uint8 b)
 {
 	SDL_Rect win;
-	SDL_Color c = {200, 200, 190};
+	SDL_Color color = {200, 200, 190};
 	Uint32 bg = SDL_MapRGB((screen)->format, r, g, b);
 
 	win.x = ARENA_W + 10;
@@ -222,13 +222,13 @@ void showMsg(char *msg1, char *msg2, char *msg3, char *msg4, Uint8 r, Uint8 g, U
 	SDL_FillRect(screen, &win, bg);
 
 	if (msg1)
-		putText(win.x + 5, win.y, c, font2, "%s", msg1);
+		putText(win.x + 5, win.y, color, font2, "%s", msg1);
 	if (msg2)
-		putText(win.x + 5, win.y + 15, c, font2, "%s", msg2);
+		putText(win.x + 5, win.y + 15, color, font2, "%s", msg2);
 	if (msg3)
-		putText(win.x + 5, win.y + 30, c, font2, "%s", msg3);
+		putText(win.x + 5, win.y + 30, color, font2, "%s", msg3);
 	if (msg4)
-		putText(win.x + 5, win.y + 45, c, font2, "%s", msg4);
+		putText(win.x + 5, win.y + 45, color, font2, "%s", msg4);
 
 	//printf("showMsg: %s %s\n", msg, s);
 }

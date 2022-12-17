@@ -236,7 +236,8 @@ void showMsg(char *msg1, char *msg2, char *msg3, char *msg4, Uint8 r, Uint8 g, U
 void showWinner(int nr, int tnr)
 {
 	static int d = R;
-	static int x = 0, y = 110;
+	static int x = 0;
+	static int y = 110;
 	int idx = rob[nr - 1];
 
 	SDL_Rect fx, fx2, ip, is;

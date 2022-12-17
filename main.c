@@ -56,7 +56,7 @@ Mix_Chunk *radrsnd = NULL;
 Mix_Chunk *robrsnd = NULL;
 Mix_Chunk *robmsnd = NULL;
 
-//SDL_Thread *thread = NULL;
+// SDL_Thread *thread = NULL;
 SDL_Event kbdEvent;
 TTF_Font *font1 = NULL;
 TTF_Font *font2 = NULL;
@@ -75,22 +75,32 @@ int ld = 4;
 Uint8 *keystate;
 
 struct Config cfg = {
-	bg_mus_play: 0,
-	fx_play: 0,
+	bg_mus_play : 0,
+	fx_play : 0,
 };
 
 const struct BaseLocations basloc[4] = {
-	{ x: 0,		y: 0, },
-	{ x: 450,	y: 0, },
-	{ x: 450,	y: 450, },
-	{ x: 0, 	y: 450, },
+	{
+		x : 0,
+		y : 0,
+	},
+	{
+		x : 450,
+		y : 0,
+	},
+	{
+		x : 450,
+		y : 450,
+	},
+	{
+		x : 0,
+		y : 450,
+	},
 };
 
-const char sdir[4] = {'U','R','D','L'}; // U, R, D, L
+const char sdir[4] = {'U', 'R', 'D', 'L'}; // U, R, D, L
 char *home_dir = NULL, *work_dir = NULL;
 char *files_list[4] = {"test1.ras", "test2.ras", "test3.ras", "test4.ras"};
-
-
 
 // ---------------------------------------------------------------------------------------------------------------
 int isSpriteRobot(int i)
@@ -187,7 +197,7 @@ int isAnyRoboMoving(void)
 	for (i = 0; i < MAX_ROBOTS; i++)
 	{
 		if (isSpriteMoving(rob[i]) || isSpriteRotating(rob[i]))
-				return (1);
+			return (1);
 	}
 
 	return (0);
@@ -201,7 +211,7 @@ int isAnyRadarActive(void)
 	{
 		if (sprite[rob[i]].visible && sprite[rob[i]].radar)
 		{
-			//printf("RADAR in ROBO-%d radar=%d\n", i, sprite[rob[i]].radar);
+			// printf("RADAR in ROBO-%d radar=%d\n", i, sprite[rob[i]].radar);
 			return (1);
 		}
 	}
@@ -230,7 +240,7 @@ void resetSprite(int i)
 	sprite[i].event = EV_NULL;
 
 	if (sprite[i].typ != ROB)
-			sprite[i].owner = 0;
+		sprite[i].owner = 0;
 
 	updateSpriteAcnt(i); //!!
 }
@@ -243,18 +253,18 @@ int detectRoboAhed(int i, int dir)
 
 	switch (sprite[i].dir)
 	{
-		case U:
-			cy = -5;
-			break;
-		case D:
-			cy = 5;
-			break;
-		case R:
-			cx = 5;
-			break;
-		case L:
-			cx = -5;
-			break;
+	case U:
+		cy = -5;
+		break;
+	case D:
+		cy = 5;
+		break;
+	case R:
+		cx = 5;
+		break;
+	case L:
+		cx = -5;
+		break;
 	}
 
 	x1 = r->x + cx;
@@ -296,16 +306,14 @@ void checkLocation(int i)
 				sprite[sh].y = sprite[i].y;
 				sprite[sh].dir = sprite[i].dir;
 				sprite[sh].visible = TRUE;
-				sprite[i].shield = (1 << r);// | (1 << (sprite[i].owner - 1));
+				sprite[i].shield = (1 << r); // | (1 << (sprite[i].owner - 1));
 				sprite[i].shcnt++;
-				//printf("\n>>> ROBO-%d got backshield %d now (base of ROBO id=%d)\n", sprite[i].owner, sh, r+1);
+				// printf("\n>>> ROBO-%d got backshield %d now (base of ROBO id=%d)\n", sprite[i].owner, sh, r+1);
 			}
-			else
-			if ((sprite[i].shield & (1 << r)) == 0)
+			else if ((sprite[i].shield & (1 << r)) == 0)
 			{
 				sprite[i].shield |= (1 << r);
 				sprite[i].shcnt++;
-
 			}
 		}
 	}
@@ -316,43 +324,42 @@ int checkSpriteCollision(int r, int i)
 	struct SpriteState *s1, *s2;
 	int cx = 8, cy = 8, cx2 = 8, cy2 = 8;
 
-	if (!sprite[r].visible || !sprite[i].visible) return (0);
+	if (!sprite[r].visible || !sprite[i].visible)
+		return (0);
 
 	if (isSpriteRocket(r))
 	{
 		switch (sprite[r].dir)
 		{
-			case U:
-			case D:
-				cx2 = 20;
-				break;
-			case R:
-			case L:
-				cy2 = 20;
-				break;
+		case U:
+		case D:
+			cx2 = 20;
+			break;
+		case R:
+		case L:
+			cy2 = 20;
+			break;
 		}
 	}
-	else
-	if (isSpriteBomb(r))
-			cx2 = cy = 13;
+	else if (isSpriteBomb(r))
+		cx2 = cy = 13;
 
 	if (isSpriteRocket(i))
 	{
 		switch (sprite[i].dir)
 		{
-			case U:
-			case D:
-				cx = 20;
-				break;
-			case R:
-			case L:
-				cy = 20;
-				break;
+		case U:
+		case D:
+			cx = 20;
+			break;
+		case R:
+		case L:
+			cy = 20;
+			break;
 		}
 	}
-	else
-	if (isSpriteBomb(i))
-			cx = cy = 13;
+	else if (isSpriteBomb(i))
+		cx = cy = 13;
 
 	s1 = &sprite[r];
 	s2 = &sprite[i];
@@ -371,7 +378,7 @@ int tryDoSpriteStep(int i)
 	int dir = sprite[i].dir;
 
 	if ((sp->dx <= 0) && (sp->dy <= 0))
-			return(TS_AT_DEST);
+		return (TS_AT_DEST);
 
 	if (isSpriteRobot(i))
 	{
@@ -387,61 +394,77 @@ int tryDoSpriteStep(int i)
 		}
 	}
 
-	//if (isSpriteRocket(i)) printf("dir=%c x=%d mx=%d\n", sdir[dir], sp->x, sp->mx);
+	// if (isSpriteRocket(i)) printf("dir=%c x=%d mx=%d\n", sdir[dir], sp->x, sp->mx);
 
-	switch (dir) {
+	switch (dir)
+	{
 	case L:
-		if (sp->x >= sp->step) {
-			if (sp->dx > 0) {
+		if (sp->x >= sp->step)
+		{
+			if (sp->dx > 0)
+			{
 				sp->x -= sp->step;
 				sp->dx -= sp->step;
 				if (sp->dx <= 0)
-						goto atdest;
+					goto atdest;
 			}
-		} else {
+		}
+		else
+		{
 			sp->dx = 0;
 			return (TS_WALL_COLL);
 		}
 		break;
 
 	case R:
-		if (sp->x <= sp->mx)	{
-			if (sp->dx > 0) {
+		if (sp->x <= sp->mx)
+		{
+			if (sp->dx > 0)
+			{
 				sp->x += sp->step;
 				sp->dx -= sp->step;
 				if (sp->dx <= 0)
-						goto atdest;
-
+					goto atdest;
 			}
-		} else {
+		}
+		else
+		{
 			sp->dx = 0;
 			return (TS_WALL_COLL);
 		}
 		break;
 
 	case U:
-		if (sp->y >= sp->step) {
-			if (sp->dy > 0) {
+		if (sp->y >= sp->step)
+		{
+			if (sp->dy > 0)
+			{
 				sp->y -= sp->step;
 				sp->dy -= sp->step;
 				if (sp->dy <= 0)
-						goto atdest;
+					goto atdest;
 			}
-		} else {
+		}
+		else
+		{
 			sp->dy = 0;
 			return (TS_WALL_COLL);
 		}
 		break;
 
 	case D:
-		if (sp->y <= sp->my) {
-			if (sp->dy > 0) {
+		if (sp->y <= sp->my)
+		{
+			if (sp->dy > 0)
+			{
 				sp->y += sp->step;
 				sp->dy -= sp->step;
 				if (sp->dy <= 0)
-						goto atdest;
+					goto atdest;
 			}
-		} else {
+		}
+		else
+		{
 			sp->dy = 0;
 			return (TS_WALL_COLL);
 		}
@@ -456,7 +479,7 @@ atdest:
 		sprite[i].points += PKT_STEP;
 		sprite[i].scnt++;
 		results_update = TRUE; //!!
-		//printf("STEP=%d for %d\n", sprite[i].scnt, i);
+							   // printf("STEP=%d for %d\n", sprite[i].scnt, i);
 	}
 
 	return (TS_AT_DEST);
@@ -469,7 +492,7 @@ int getFreeRocket(void)
 	for (i = 0; i < MAX_ROCKETS; i++)
 	{
 		if (!sprite[roc[i]].visible)
-				return (roc[i]);
+			return (roc[i]);
 	}
 
 	return (0);
@@ -493,21 +516,21 @@ int getFreeExplosion(void)
 
 // ---------------------------------------------------------------------------------------------------------------
 
-
 int rocLunchBySpriteID(int i)
 {
 	int dir;
 	int rocn;
 
-	if (!isSpriteRobot(i) || !sprite[i].visible) return (0);
+	if (!isSpriteRobot(i) || !sprite[i].visible)
+		return (0);
 
 	dir = sprite[i].dir;
 	rocn = getFreeRocket();
 
-	//if (sprite[robn].radar)	return (0);
-	//printf("Rocket %d lunched by ROBO-%d on dir=%c (radar=%d)\n", rocn, robn, sdir[dir], sprite[robn].radar);
+	// if (sprite[robn].radar)	return (0);
+	// printf("Rocket %d lunched by ROBO-%d on dir=%c (radar=%d)\n", rocn, robn, sdir[dir], sprite[robn].radar);
 
-	if (rocn !=0)
+	if (rocn != 0)
 	{
 		sprite[rocn].visible = TRUE;
 		sprite[rocn].x = sprite[i].x;
@@ -517,20 +540,20 @@ int rocLunchBySpriteID(int i)
 
 		switch (dir)
 		{
-			case U:
-			case D:
-				sprite[rocn].dx = 0;
-				sprite[rocn].dy = ROCKET_RANGE;
-				break;
-			case R:
-			case L:
-				sprite[rocn].dx = ROCKET_RANGE;
-				sprite[rocn].dy = 0;
-				break;
+		case U:
+		case D:
+			sprite[rocn].dx = 0;
+			sprite[rocn].dy = ROCKET_RANGE;
+			break;
+		case R:
+		case L:
+			sprite[rocn].dx = ROCKET_RANGE;
+			sprite[rocn].dy = 0;
+			break;
 		}
 
 		if (cfg.fx_play)
-				Mix_PlayChannel(-1, rocssnd, 0);
+			Mix_PlayChannel(-1, rocssnd, 0);
 	}
 	else
 		return (-1);
@@ -547,11 +570,11 @@ int startRadarByRobo(int robot_nr)
 	int dir;
 
 	if (radar || !sprite[robn].visible)
-			return (-1);
+		return (-1);
 
 	radar = getFreeRadar();
 	if (!radar)
-			return (-1);
+		return (-1);
 
 	dir = sprite[robn].dir;
 
@@ -564,21 +587,21 @@ int startRadarByRobo(int robot_nr)
 
 	switch (dir)
 	{
-		case U:
-		case D:
-			sprite[radar].dx = 0;
-			sprite[radar].dy = RADAR_RANGE;
-			break;
-		case R:
-		case L:
-			sprite[radar].dx = RADAR_RANGE;
-			sprite[radar].dy = 0;
-			break;
+	case U:
+	case D:
+		sprite[radar].dx = 0;
+		sprite[radar].dy = RADAR_RANGE;
+		break;
+	case R:
+	case L:
+		sprite[radar].dx = RADAR_RANGE;
+		sprite[radar].dy = 0;
+		break;
 	}
-	//printf("RADAR-%d started (%dx%d) dx=%d dy=%d owner=%d\n", radar, sprite[radar].x, sprite[radar].y, sprite[radar].dx, sprite[radar].dy, robn);
+	// printf("RADAR-%d started (%dx%d) dx=%d dy=%d owner=%d\n", radar, sprite[radar].x, sprite[radar].y, sprite[radar].dx, sprite[radar].dy, robn);
 
 	if (cfg.fx_play)
-			Mix_PlayChannel(-1, radpsnd, 0);
+		Mix_PlayChannel(-1, radpsnd, 0);
 
 	return (0);
 }
@@ -589,7 +612,7 @@ int putBombByRobo(int robot_nr)
 	int bomb_cnt, i, x, y;
 
 	if (!sprite[robn].visible || !sprite[robn].bomb)
-			return (-1);
+		return (-1);
 
 	x = sprite[robn].x;
 	y = sprite[robn].y;
@@ -605,7 +628,7 @@ int putBombByRobo(int robot_nr)
 
 	bomb_cnt = getFreeBomb();
 	if (!bomb_cnt)
-			return (-1);
+		return (-1);
 
 	sprite[robn].bomb--;
 	results_update = TRUE;
@@ -617,9 +640,9 @@ int putBombByRobo(int robot_nr)
 
 	sprite[bomb_cnt].img = bomb[robot_nr];
 
-	//if (cfg.fx_play)
+	// if (cfg.fx_play)
 	//		Mix_PlayChannel(-1, bompsnd, 0);
-	//printf("BOMB-%d put (%dx%d) owner=%d\n", bomb, sprite[bomb].x, sprite[bomb].y, robn);
+	// printf("BOMB-%d put (%dx%d) owner=%d\n", bomb, sprite[bomb].x, sprite[bomb].y, robn);
 
 	return (0);
 }
@@ -630,18 +653,18 @@ void calcSpriteSteps(int i, int dir)
 
 	switch (dir)
 	{
-		case U:
-		case D:
-			sprite[i].dx = 0;
-			sprite[i].dy = ROBOT_RANGE;
-			break;
-		case R:
-		case L:
-			sprite[i].dx = ROBOT_RANGE;
-			sprite[i].dy = 0;
-			break;
+	case U:
+	case D:
+		sprite[i].dx = 0;
+		sprite[i].dy = ROBOT_RANGE;
+		break;
+	case R:
+	case L:
+		sprite[i].dx = ROBOT_RANGE;
+		sprite[i].dy = 0;
+		break;
 	}
-	//printf("ROBO%d dx=%d dy=%d x=%d y=%d\n", i, sprite[i].dx, sprite[i].dy, sprite[i].x, sprite[i].y);
+	// printf("ROBO%d dx=%d dy=%d x=%d y=%d\n", i, sprite[i].dx, sprite[i].dy, sprite[i].x, sprite[i].y);
 }
 
 void checkAnyAlive(void)
@@ -672,9 +695,9 @@ int do_logic(void)
 
 	for (i = FSPRITE; i < sprite_nr; i++)
 	{
-		if (!sprite[i].visible) continue;
-		else
-		if (isSpriteExplosion(i))
+		if (!sprite[i].visible)
+			continue;
+		else if (isSpriteExplosion(i))
 		{
 			int r1 = sprite[i].owner;
 
@@ -709,8 +732,7 @@ int do_logic(void)
 			else
 				sprite[i].visible = FALSE;
 		}
-		else
-		if (isSpriteBomb(i))
+		else if (isSpriteBomb(i))
 		{
 			int r;
 
@@ -719,9 +741,9 @@ int do_logic(void)
 				int r1 = rob[r];
 				int o = sprite[i].owner;
 
-				if (o == r1) continue;
-				else
-				if (checkSpriteCollision(i, r1))
+				if (o == r1)
+					continue;
+				else if (checkSpriteCollision(i, r1))
 				{
 					int e = getFreeExplosion();
 
@@ -761,8 +783,7 @@ int do_logic(void)
 				}
 			}
 		}
-		else
-		if (isSpriteRocket(i))
+		else if (isSpriteRocket(i))
 		{
 			int r, owner = sprite[i].owner;
 
@@ -770,8 +791,10 @@ int do_logic(void)
 			{
 				int r2 = roc[r];
 
-				if (!sprite[r2].visible) continue; // Double checked
-				if (owner == sprite[r2].owner) continue;
+				if (!sprite[r2].visible)
+					continue; // Double checked
+				if (owner == sprite[r2].owner)
+					continue;
 
 				if (checkSpriteCollision(i, r2))
 				{
@@ -800,7 +823,8 @@ int do_logic(void)
 			{
 				int r1 = rob[r];
 
-				if (owner == r1) continue;
+				if (owner == r1)
+					continue;
 
 				if (checkSpriteCollision(i, r1))
 				{
@@ -856,21 +880,21 @@ int do_logic(void)
 				}
 			}
 		}
-		else
-		if (isSpriteRadar(i) && sprite[i].owner && !sprite[i].echowith)
+		else if (isSpriteRadar(i) && sprite[i].owner && !sprite[i].echowith)
 		{
 			int r;
-			int direv[4] = {D, L, U, R}; //ORIG U, R, D, L -> D, L, U, R
+			int direv[4] = {D, L, U, R}; // ORIG U, R, D, L -> D, L, U, R
 
 			for (r = 0; r < MAX_ROBOTS; r++)
 			{
 				int r1 = rob[r];
 
-				if ((sprite[i].owner == r1)) continue;
+				if ((sprite[i].owner == r1))
+					continue;
 				if (checkSpriteCollision(i, r1))
 				{
 					sprite[i].echowith = r1;
-					//printf("RAD echo with %d\n", r1);
+					// printf("RAD echo with %d\n", r1);
 				}
 			}
 
@@ -880,11 +904,14 @@ int do_logic(void)
 				{
 					int r1 = roc[r];
 
-					if (!sprite[r1].visible) continue; // Double check to speed up
-					if (sprite[i].owner == sprite[r1].owner) continue;
-					if (sprite[i].dir != direv[sprite[r1].dir]) continue;
+					if (!sprite[r1].visible)
+						continue; // Double check to speed up
+					if (sprite[i].owner == sprite[r1].owner)
+						continue;
+					if (sprite[i].dir != direv[sprite[r1].dir])
+						continue;
 					if (checkSpriteCollision(i, r1))
-							sprite[i].echowith = r1;
+						sprite[i].echowith = r1;
 				}
 			}
 
@@ -893,17 +920,19 @@ int do_logic(void)
 				sprite[i].dir = direv[sprite[i].dir];
 				sprite[i].img = radar[1];
 
-				if (sprite[i].dx) {
+				if (sprite[i].dx)
+				{
 					sprite[i].dx = (RADAR_RANGE - SPRITE_SIZE) - sprite[i].dx;
 				}
-				if (sprite[i].dy) {
+				if (sprite[i].dy)
+				{
 					sprite[i].dy = (RADAR_RANGE - SPRITE_SIZE) - sprite[i].dy;
 				}
 
 				if (cfg.fx_play)
 					Mix_PlayChannel(-1, radrsnd, 0);
 
-				//printf("RADAR ECHO with %d (%d - %d)\n", sprite[i].echowith, sprite[i].dx, sprite[i].dy);
+				// printf("RADAR ECHO with %d (%d - %d)\n", sprite[i].echowith, sprite[i].dx, sprite[i].dy);
 			}
 		}
 
@@ -912,10 +941,9 @@ int do_logic(void)
 		if (isSpriteRocket(i) && sprite[i].visible && (ret == TS_AT_DEST))
 		{
 			sprite[i].visible = FALSE;
-			//printf("Rocket %d ret=%d\n", i, ret);
+			// printf("Rocket %d ret=%d\n", i, ret);
 		}
-		else
-		if (isSpriteRadar(i))
+		else if (isSpriteRadar(i))
 		{
 			if (sprite[i].echowith && !isSpriteMoving(i))
 			{
@@ -928,13 +956,12 @@ int do_logic(void)
 
 				if (e)
 				{
-					//printf("RADAR-%d returned %d [%s detected]\n", i, e, isSpriteRobot(e)?"ROBO":(isSpriteRocket(e)?"ROCKET":"???"));
+					// printf("RADAR-%d returned %d [%s detected]\n", i, e, isSpriteRobot(e)?"ROBO":(isSpriteRocket(e)?"ROCKET":"???"));
 					if (isSpriteRobot(e))
 					{
 						if (isSpriteRobot(e))
 							sprite[o].event = EV_ROBOT;
-						else
-						if (isSpriteRocket(e))
+						else if (isSpriteRocket(e))
 							sprite[o].event = EV_ROCKET;
 					}
 				}
@@ -946,8 +973,7 @@ int do_logic(void)
 				sprite[sprite[i].owner].radar = 0;
 			}
 		}
-		else
-		if (isSpriteRobot(i))
+		else if (isSpriteRobot(i))
 		{
 			if ((sprite[i].shcnt < 2) && (ret == TS_AT_DEST))
 				checkLocation(i);
@@ -957,12 +983,12 @@ int do_logic(void)
 				switch (ret)
 				{
 				case TS_ROBO_COLL:
-					//printf("ROBO-%d collision detected on dir=%c\n", i-1 , sdir[sprite[i].dir]);
+					// printf("ROBO-%d collision detected on dir=%c\n", i-1 , sdir[sprite[i].dir]);
 					sprite[i].event = EV_ROBOT;
 					break;
 
 				case TS_WALL_COLL:
-					//printf("ROBO-%d wall collision detected on dir=%c\n", i-1, sdir[sprite[i].dir]);
+					// printf("ROBO-%d wall collision detected on dir=%c\n", i-1, sdir[sprite[i].dir]);
 					sprite[i].event = EV_WALL;
 					break;
 				}
@@ -986,7 +1012,7 @@ int do_logic(void)
 		}
 		else
 		{
-			//printf(">> RC=%d | ", rc);
+			// printf(">> RC=%d | ", rc);
 			ri = rob[rc];
 
 			if (sprite[ri].life)
@@ -1003,18 +1029,18 @@ int do_logic(void)
 					sprite[ri].dir = (sprite[ri].dir > 0) ? sprite[ri].dir - 1 : L;
 					sprite[ri].arot = -sprite[ri].aph;
 					if (cfg.fx_play)
-							Mix_PlayChannel(-1, robrsnd, 0);
+						Mix_PlayChannel(-1, robrsnd, 0);
 					break;
 				case C_TURN_R:
 					sprite[ri].dir = (sprite[ri].dir < L) ? sprite[ri].dir + 1 : U;
 					sprite[ri].arot = sprite[ri].aph;
 					if (cfg.fx_play)
-							Mix_PlayChannel(-1, robrsnd, 0);
+						Mix_PlayChannel(-1, robrsnd, 0);
 					break;
 				case C_STEP:
 					calcSpriteSteps(ri, sprite[ri].dir);
 					if (cfg.fx_play)
-							Mix_PlayChannel(-1, robmsnd, 0);
+						Mix_PlayChannel(-1, robmsnd, 0);
 					break;
 				case C_ROCKET:
 					rocLunchBySpriteID(rob[rc]);
@@ -1029,8 +1055,8 @@ int do_logic(void)
 					break;
 				}
 
-				//if (debug)	printf("ROBO-%d cmd=%s i=%d dir=%c radar=%d\n", rc+1, rComS[instr], i, sdir[sprite[i].dir], sprite[i].radar);
-				//printf("DIS: %s\n", disasm);
+				// if (debug)	printf("ROBO-%d cmd=%s i=%d dir=%c radar=%d\n", rc+1, rComS[instr], i, sdir[sprite[i].dir], sprite[i].radar);
+				// printf("DIS: %s\n", disasm);
 
 				sprite[ri].event = EV_NULL;
 				printCodes(disasm, 0);
@@ -1039,12 +1065,11 @@ int do_logic(void)
 			do
 			{
 				if (++rc == MAX_ROBOTS)
-						rc = 0;
-			}
-			while (sprite[rob[rc]].life == 0);
+					rc = 0;
+			} while (sprite[rob[rc]].life == 0);
 
 			if (debug)
-					status.stop = 2;
+				status.stop = 2;
 		}
 	}
 	//------------------------------------------------------
@@ -1061,7 +1086,7 @@ void animate_all(void)
 	SDL_Rect sd, sp;
 
 	if (results_update || (status.stop))
-			results_update = drawResults(0, 0, debug, drive, status.stop);
+		results_update = drawResults(0, 0, debug, drive, status.stop);
 
 	drawStatus(&status);
 
@@ -1097,18 +1122,17 @@ void animate_all(void)
 				{
 					if ((cycle % sprite[i].adiv) == 0)
 					{
-					 	if (sprite[i].aen & OT_ANIM)
-					 	{
+						if (sprite[i].aen & OT_ANIM)
+						{
 							if (++sprite[i].acnt > sprite[i].maxph)
 							{
 								sprite[i].visible = FALSE;
 								sprite[i].acnt = 0;
 								sprite[i].owner = 0;
 							}
-							//printf("OTA: Bum=%d vis=%d acnt=%d maxph=%d\n", i, sprite[i].visible, dir, sprite[i].maxph);
+							// printf("OTA: Bum=%d vis=%d acnt=%d maxph=%d\n", i, sprite[i].visible, dir, sprite[i].maxph);
 						}
-						else
-						if (sprite[i].aen == ENA_ROTATE_ANIM)
+						else if (sprite[i].aen == ENA_ROTATE_ANIM)
 						{
 							if (sprite[i].arot)
 							{
@@ -1128,9 +1152,9 @@ void animate_all(void)
 									if (sprite[i].acnt < 0)
 										sprite[i].acnt = sprite[i].maxph;
 								}
-								//printf("i=%d arot=%d acnt=%d\n", i, sprite[i].arot, sprite[i].acnt);
+								// printf("i=%d arot=%d acnt=%d\n", i, sprite[i].arot, sprite[i].acnt);
 							}
-							//if ((sprite[i].arot == 0) && (sprite[i].acnt % 5)) { printf("i=%d arot=%d acnt=%d\n", i, sprite[i].arot, sprite[i].acnt); status.stop = 2;}
+							// if ((sprite[i].arot == 0) && (sprite[i].acnt % 5)) { printf("i=%d arot=%d acnt=%d\n", i, sprite[i].arot, sprite[i].acnt); status.stop = 2;}
 						}
 						else
 						{
@@ -1180,7 +1204,8 @@ void animate_all(void)
 
 			for (r = 0; r < MAX_ROBOTS; r++)
 			{
-				if (!sprite[rob[r]].visible) continue;
+				if (!sprite[rob[r]].visible)
+					continue;
 				if (sprite[rob[r]].points >= mp)
 				{
 					if (sprite[rob[r]].points > mp)
@@ -1235,7 +1260,7 @@ int SetSprite(SDL_Surface *img, int visible, int iposx, int iposy, int step, int
 		{
 			sprite[sprite_nr].aph = (img->w / img->h) / 4;
 			updateSpriteAcnt(sprite_nr);
-			//printf("ROB id=%d aph=%d acnt=%d maxph=%d\n", sprite_nr, sprite[sprite_nr].aph, sprite[sprite_nr].acnt, sprite[sprite_nr].maxph);
+			// printf("ROB id=%d aph=%d acnt=%d maxph=%d\n", sprite_nr, sprite[sprite_nr].aph, sprite[sprite_nr].acnt, sprite[sprite_nr].maxph);
 		}
 		sprite[sprite_nr].life = MAX_LIFE;
 		sprite[sprite_nr].bomb = MAX_ROBO_BOMBS;
@@ -1252,7 +1277,7 @@ int resetGame(void)
 
 	r = brainInit(work_dir, files_list, &comErr);
 	if (r < 0)
-			goto fail;
+		goto fail;
 
 	for (i = FSPRITE; i < sprite_nr; i++)
 		resetSprite(i);
@@ -1327,7 +1352,7 @@ char *getHomeDir(void)
 	char *homedir;
 
 	if ((homedir = getenv("HOME")) == NULL)
-		 homedir = getpwuid(getuid())->pw_dir;
+		homedir = getpwuid(getuid())->pw_dir;
 
 	if (homedir == NULL)
 	{
@@ -1362,7 +1387,7 @@ int readCFG(char *hdir)
 			return (-1);
 		}
 		else
-			printf("FX is %s\nBGM is %s\n", cfg.fx_play?"on":"off", cfg.bg_mus_play?"on":"off");
+			printf("FX is %s\nBGM is %s\n", cfg.fx_play ? "on" : "off", cfg.bg_mus_play ? "on" : "off");
 	}
 	else
 		printf("Unable to read config file - set to defaults\n");
@@ -1384,7 +1409,8 @@ int saveCFG(const char *hdir)
 		printf("Save config\n");
 		ret = write(f, &cfg, sizeof(cfg));
 		close(f);
-		if (ret != sizeof(cfg)) {
+		if (ret != sizeof(cfg))
+		{
 			printf("Error saving config file!");
 		}
 		return (0);
@@ -1397,13 +1423,15 @@ int saveCFG(const char *hdir)
 
 int prepareWorkDir(const char *hdir, char **wdir)
 {
-	DIR* dir;
+	DIR *dir;
 
-	if (hdir == NULL) return (-1);
+	if (hdir == NULL)
+		return (-1);
 	if (*wdir == NULL)
 	{
 		*wdir = malloc(strlen(hdir) + 16);
-		if (*wdir == NULL) return (-1);
+		if (*wdir == NULL)
+			return (-1);
 
 		strcpy(*wdir, hdir);
 	}
@@ -1425,7 +1453,7 @@ int prepareWorkDir(const char *hdir, char **wdir)
 
 // ---------------------------------------------------------------------------------------------------------------
 
-int main (int argc, char * args[])
+int main(int argc, char *args[])
 {
 	int i, fps;
 	int progExit = 0;
@@ -1438,11 +1466,11 @@ int main (int argc, char * args[])
 	SDL_WM_SetCaption("Robo Arena", NULL);
 	SDL_WM_SetIcon(IMG_Load("res/icon.png"), NULL);
 
-    if (TTF_Init() < 0)
-    {
-    	printf("Unable to initialize TTF library\n");
-    	return (0);
-    }
+	if (TTF_Init() < 0)
+	{
+		printf("Unable to initialize TTF library\n");
+		return (0);
+	}
 
 	if ((font1 = TTF_OpenFont("res/ubuntumono-b.ttf", 20)) == NULL)
 	{
@@ -1466,8 +1494,7 @@ int main (int argc, char * args[])
 			((radpsnd = Mix_LoadWAV("res/radar.ogg")) == NULL) ||
 			((radrsnd = Mix_LoadWAV("res/radar2.ogg")) == NULL) ||
 			((robrsnd = Mix_LoadWAV("res/robotr.ogg")) == NULL) ||
-			((robmsnd = Mix_LoadWAV("res/robotm.ogg")) == NULL)
-			)
+			((robmsnd = Mix_LoadWAV("res/robotm.ogg")) == NULL))
 		{
 			printf("Loading of music/effects was not possible: %s\n", Mix_GetError());
 			return (0);
@@ -1478,21 +1505,29 @@ int main (int argc, char * args[])
 
 	home_dir = getHomeDir();
 	if (home_dir == NULL)
-			return (0);
+		return (0);
 
 	readCFG(home_dir);
 	prepareWorkDir(home_dir, &work_dir);
 
-	Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
-	if (gaovsnd) Mix_VolumeChunk(gaovsnd, MIX_MAX_VOLUME);
-	if (explsnd) Mix_VolumeChunk(explsnd, MIX_MAX_VOLUME/6);
-	if (rocssnd) Mix_VolumeChunk(rocssnd, MIX_MAX_VOLUME/6);
-	if (rocesnd) Mix_VolumeChunk(rocesnd, MIX_MAX_VOLUME/6);
-	if (radpsnd) Mix_VolumeChunk(radpsnd, MIX_MAX_VOLUME);
-	if (radrsnd) Mix_VolumeChunk(radrsnd, MIX_MAX_VOLUME);
-	if (robrsnd) Mix_VolumeChunk(robrsnd, MIX_MAX_VOLUME/6);
-	if (robmsnd) Mix_VolumeChunk(robmsnd, MIX_MAX_VOLUME/7);
+	if (gaovsnd)
+		Mix_VolumeChunk(gaovsnd, MIX_MAX_VOLUME);
+	if (explsnd)
+		Mix_VolumeChunk(explsnd, MIX_MAX_VOLUME / 6);
+	if (rocssnd)
+		Mix_VolumeChunk(rocssnd, MIX_MAX_VOLUME / 6);
+	if (rocesnd)
+		Mix_VolumeChunk(rocesnd, MIX_MAX_VOLUME / 6);
+	if (radpsnd)
+		Mix_VolumeChunk(radpsnd, MIX_MAX_VOLUME);
+	if (radrsnd)
+		Mix_VolumeChunk(radrsnd, MIX_MAX_VOLUME);
+	if (robrsnd)
+		Mix_VolumeChunk(robrsnd, MIX_MAX_VOLUME / 6);
+	if (robmsnd)
+		Mix_VolumeChunk(robmsnd, MIX_MAX_VOLUME / 7);
 
 	//---------------------------------------------------------------------------------------------------
 	screen = SDL_SetVideoMode(ARENA_W + RESULT_COLW, ARENA_H + STATUS_H, 0, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_HWACCEL);
@@ -1513,9 +1548,9 @@ int main (int argc, char * args[])
 	robo[2] = LoadSprite("res/robo3r.png", 255);
 	robo[3] = LoadSprite("res/robo4r.png", 255);
 	rocket = LoadSprite("res/rocket.png", 255);
-	explosion= LoadSprite("res/explosion.png", 240);
+	explosion = LoadSprite("res/explosion.png", 240);
 	radar[0] = LoadSprite("res/radar1.png", 190);
-	radar[1] = LoadSprite("res/radar2.png",180);
+	radar[1] = LoadSprite("res/radar2.png", 180);
 	bombicon = LoadSprite("res/bombico.png", 200);
 	bomb[0] = LoadSprite("res/bomb1.png", 255);
 	bomb[1] = LoadSprite("res/bomb2.png", 255);
@@ -1529,23 +1564,23 @@ int main (int argc, char * args[])
 		!bomb[0] || !bomb[1] || !bomb[2] || !bomb[3] || !shield[0] || !shield[1])
 	{
 		printf("Unable to load one of the spirits\n");
-		return(0);
+		return (0);
 	}
 
 	SDL_BlitSurface(bg, NULL, screen, NULL);
 
 	if (cfg.bg_mus_play)
-		 Mix_PlayMusic(bgmus, -1);
+		Mix_PlayMusic(bgmus, -1);
 
-	//fantom = SetSprite(bomb, HIDDEN, 250, 250, VISIBLE, DIS_MOVE_ANIM, D); // We need grab sprite idx = 0 !!!
+	// fantom = SetSprite(bomb, HIDDEN, 250, 250, VISIBLE, DIS_MOVE_ANIM, D); // We need grab sprite idx = 0 !!!
 
-    for (i = 0; i < MAX_BOMBS; i++)
-		bom[i] = SetSprite(bomb[0], HIDDEN,  0, 0, 1, 25, ENA_MOVE_ANIM, 0, BOM);
+	for (i = 0; i < MAX_BOMBS; i++)
+		bom[i] = SetSprite(bomb[0], HIDDEN, 0, 0, 1, 25, ENA_MOVE_ANIM, 0, BOM);
 
-	rob[0] = SetSprite(robo[0], VISIBLE,   0,   0, 1, 4, ENA_ROTATE_ANIM, D, ROB);
-	rob[1] = SetSprite(robo[1], VISIBLE, 450,   0, 1, 4, ENA_ROTATE_ANIM, L, ROB);
+	rob[0] = SetSprite(robo[0], VISIBLE, 0, 0, 1, 4, ENA_ROTATE_ANIM, D, ROB);
+	rob[1] = SetSprite(robo[1], VISIBLE, 450, 0, 1, 4, ENA_ROTATE_ANIM, L, ROB);
 	rob[2] = SetSprite(robo[2], VISIBLE, 450, 450, 1, 4, ENA_ROTATE_ANIM, U, ROB);
-	rob[3] = SetSprite(robo[3], VISIBLE,   0, 450, 1, 4, ENA_ROTATE_ANIM, R, ROB);
+	rob[3] = SetSprite(robo[3], VISIBLE, 0, 450, 1, 4, ENA_ROTATE_ANIM, R, ROB);
 	for (i = 0; i < MAX_ROBOTS; i++)
 		sprite[rob[i]].owner = i + 1;
 
@@ -1558,9 +1593,8 @@ int main (int argc, char * args[])
 	for (i = 0; i < MAX_EXPLOSION; i++)
 		bum[i] = SetSprite(explosion, HIDDEN, 0, 0, 1, 6, OT_ANIM, 0, EXP);
 
-    for (i = 0; i < MAX_RADAR; i++)
-		rad[i] = SetSprite(radar[0], HIDDEN,  0, 0, 4, 1, DIS_ANIM, 0, RAD); //!! speed z 3 na 4
-
+	for (i = 0; i < MAX_RADAR; i++)
+		rad[i] = SetSprite(radar[0], HIDDEN, 0, 0, 4, 1, DIS_ANIM, 0, RAD); //!! speed z 3 na 4
 
 	//---------------------------------------------------------------------------------------------------
 
@@ -1573,7 +1607,7 @@ int main (int argc, char * args[])
 		return (0);
 	}
 
-	//thread = SDL_CreateThread(logic_thread, NULL);
+	// thread = SDL_CreateThread(logic_thread, NULL);
 
 	while (progExit == 0)
 	{
@@ -1581,17 +1615,18 @@ int main (int argc, char * args[])
 
 		while (SDL_PollEvent(&kbdEvent))
 		{
-			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q]) progExit = 1;
-			else
-			if (keystate[SDLK_RIGHT]) ld = R;
-			else
-			if (keystate[SDLK_LEFT]) ld = L;
-			else
-			if (keystate[SDLK_UP]) ld = U;
-			else
-			if (keystate[SDLK_DOWN]) ld = D;
-			else
-			if (keystate[SDLK_s]) {
+			if (kbdEvent.type == SDL_QUIT || keystate[SDLK_q])
+				progExit = 1;
+			else if (keystate[SDLK_RIGHT])
+				ld = R;
+			else if (keystate[SDLK_LEFT])
+				ld = L;
+			else if (keystate[SDLK_UP])
+				ld = U;
+			else if (keystate[SDLK_DOWN])
+				ld = D;
+			else if (keystate[SDLK_s])
+			{
 				if (!debug && !drive)
 				{
 					status.stop = (status.stop == 2) ? 0 : ((status.stop == 0) ? 2 : 1);
@@ -1602,59 +1637,78 @@ int main (int argc, char * args[])
 						Mix_ResumeMusic();
 				}
 			}
-			else
-			if (keystate[SDLK_r]) resetGame();
-			else
-			if (keystate[SDLK_f]) { cfg.fx_play = !cfg.fx_play; }
-			else
-			if (keystate[SDLK_m]) {
-				if (!Mix_PlayingMusic()) {
+			else if (keystate[SDLK_r])
+				resetGame();
+			else if (keystate[SDLK_f])
+			{
+				cfg.fx_play = !cfg.fx_play;
+			}
+			else if (keystate[SDLK_m])
+			{
+				if (!Mix_PlayingMusic())
+				{
 					Mix_PlayMusic(bgmus, -1);
 					cfg.bg_mus_play = 1;
-				} else {
+				}
+				else
+				{
 					Mix_FadeOutMusic(300);
 					cfg.bg_mus_play = 0;
 				}
 			}
-			else
-			if (keystate[SDLK_SPACE]) { if (debug) status.stop = 0; }
-			else
-			if (keystate[SDLK_a]) {
+			else if (keystate[SDLK_SPACE])
+			{
+				if (debug)
+					status.stop = 0;
+			}
+			else if (keystate[SDLK_a])
+			{
 				drive = 0;
 				results_update = TRUE;
 				debug = FALSE;
 				status.stop = 0;
 			}
-			else
-			if (keystate[SDLK_d]) {
+			else if (keystate[SDLK_d])
+			{
 				debug = !debug;
-				//printf("Debug mode is %s\n", debug?"on":"off");
+				// printf("Debug mode is %s\n", debug?"on":"off");
 				if (!debug)
-						status.stop = 0;
+					status.stop = 0;
 				results_update = TRUE;
 			}
-			else
-			if (keystate[SDLK_w]) {
+			else if (keystate[SDLK_w])
+			{
 				status.stop = 1;
 				winner = 1;
 				start = SDL_GetTicks();
 			}
-			else
-			if (keystate[SDLK_n]) {
+			else if (keystate[SDLK_n])
+			{
 				showMsg("Connecting game server: ", NULL, NULL, NULL, 100, 100, 100);
 			}
-			else
-			if (debug)
+			else if (debug)
 			{
-				if (keystate[SDLK_1]) { drive = 1; results_update = TRUE; }
-				else
-				if (keystate[SDLK_2]) { drive = 2; results_update = TRUE; }
-				else
-				if (keystate[SDLK_3]) { drive = 3; results_update = TRUE; }
-				else
-				if (keystate[SDLK_4]) { drive = 4; results_update = TRUE; }
+				if (keystate[SDLK_1])
+				{
+					drive = 1;
+					results_update = TRUE;
+				}
+				else if (keystate[SDLK_2])
+				{
+					drive = 2;
+					results_update = TRUE;
+				}
+				else if (keystate[SDLK_3])
+				{
+					drive = 3;
+					results_update = TRUE;
+				}
+				else if (keystate[SDLK_4])
+				{
+					drive = 4;
+					results_update = TRUE;
+				}
 			}
-
 		}
 
 		if ((status.stop == 1) && ((SDL_GetTicks() - start) > 10000))
@@ -1666,14 +1720,14 @@ int main (int argc, char * args[])
 
 		{
 			int w = (SDL_GetTicks() - fps);
-			//printf("%d\n", w);
-			SDL_Delay(((w > 7) ? 0 : (7-w)));
+			// printf("%d\n", w);
+			SDL_Delay(((w > 7) ? 0 : (7 - w)));
 		}
 	}
 
 	showGoodbye();
 	SDL_Flip(screen);
-	//SDL_Delay(10000);
+	// SDL_Delay(10000);
 
 	saveCFG(home_dir);
 
@@ -1682,7 +1736,7 @@ int main (int argc, char * args[])
 	Mix_HaltMusic();
 	Mix_HaltChannel(-1);
 
-	//Mix_CloseAudio();
+	// Mix_CloseAudio();
 	SDL_CloseAudio();
 	Mix_FreeMusic(bgmus);
 
@@ -1703,12 +1757,11 @@ int main (int argc, char * args[])
 	SDL_FreeSurface(radar[1]);
 	SDL_FreeSurface(bg);
 
-	//SDL_FreeSurface(bombicon);
-	//SDL_KillThread(thread);
+	// SDL_FreeSurface(bombicon);
+	// SDL_KillThread(thread);
 
 	TTF_Quit();
 	SDL_Quit();
 
 	return 0;
 }
-

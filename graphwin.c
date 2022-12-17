@@ -63,16 +63,16 @@ int drawResults(int x, int y, int dbg, int drv, int stop)
 	SDL_Color textColor = {0, 0, 0};
 	SDL_Color pointsColor = {255, 255, 255};
 
-	Uint32 bg = SDL_MapRGB((screen)->format, 195, 165, 90);
-	Uint32 gr = SDL_MapRGB((screen)->format, 0, 200, 0);
-	Uint32 re = SDL_MapRGB((screen)->format, 200, 0, 0);
+	Uint32 bg = SDL_MapRGB(screen->format, 195, 165, 90);
+	Uint32 gr = SDL_MapRGB(screen->format, 0, 200, 0);
+	Uint32 re = SDL_MapRGB(screen->format, 200, 0, 0);
 
 	Uint32 robc[4];
 
-	robc[0] = SDL_MapRGB((screen)->format, 255, 255, 255);
-	robc[1] = SDL_MapRGB((screen)->format, 255, 0, 0);
-	robc[2] = SDL_MapRGB((screen)->format, 0, 255, 0);
-	robc[3] = SDL_MapRGB((screen)->format, 248, 161, 4);
+	robc[0] = SDL_MapRGB(screen->format, 255, 255, 255);
+	robc[1] = SDL_MapRGB(screen->format, 255, 0, 0);
+	robc[2] = SDL_MapRGB(screen->format, 0, 255, 0);
+	robc[3] = SDL_MapRGB(screen->format, 248, 161, 4);
 
 	win.x = ARENA_W;
 	win.y = 0;
@@ -94,7 +94,7 @@ int drawResults(int x, int y, int dbg, int drv, int stop)
 	for (i = 0; i < MAX_ROBOTS; i++)
 	{
 		int idx = rob[i];
-		Uint32 tgr = (!sprite[idx].visible) ? SDL_MapRGB((screen)->format, 10, 10, 10) : gr;
+		Uint32 tgr = (!sprite[idx].visible) ? SDL_MapRGB(screen->format, 10, 10, 10) : gr;
 
 		fillR0.x = win.x + 10;
 		fillR0.y = win.y + OFFSET_Y + (R_SY * i);
@@ -145,7 +145,7 @@ void drawStatus(struct Status *s)
 	win.y = ARENA_W;
 	win.w = ARENA_W;
 	win.h = STATUS_H;
-	SDL_FillRect(screen, &win, SDL_MapRGB((screen)->format, 0, 0, 0));
+	SDL_FillRect(screen, &win, SDL_MapRGB(screen->format, 0, 0, 0));
 
 	if (s->stop == 3)
 	{
@@ -164,14 +164,14 @@ void drawStatus(struct Status *s)
 
 void printCodes(char *line, int reset)
 {
-#define LNR 17
+	#define LNR 17
 
 	static char lines[LNR][64];
 	static int lc[LNR];
-	Uint32 bg = SDL_MapRGB((screen)->format, 0, 0, 0);
+	Uint32 bg = SDL_MapRGB(screen->format, 0, 0, 0);
 	SDL_Color textColor[4] = {{255, 255, 255}, {255, 0, 0}, {0, 255, 0}, {248, 161, 4}};
 	SDL_Rect win;
-	int ln;
+	//int ln;
 
 	if (reset)
 	{
@@ -182,7 +182,7 @@ void printCodes(char *line, int reset)
 	if (line && strlen(line))
 	{
 		// printf("%s\n", line);
-		for (ln = 1; ln < LNR; ln++)
+		for (int ln = 1; ln < LNR; ln++)
 		{
 			strcpy(lines[ln - 1], lines[ln]);
 			lc[ln - 1] = lc[ln];
@@ -200,7 +200,7 @@ void printCodes(char *line, int reset)
 	win.h = 280;
 	SDL_FillRect(screen, &win, bg);
 
-	for (ln = 0; ln < LNR; ln++)
+	for (int ln = 0; ln < LNR; ln++)
 	{
 		if (strlen(lines[ln]))
 			putText(win.x + 5, win.y + 2 + (16 * ln), textColor[lc[ln]], font2, "%s", lines[ln]);
@@ -211,7 +211,7 @@ void showMsg(char *msg1, char *msg2, char *msg3, char *msg4, Uint8 r, Uint8 g, U
 {
 	SDL_Rect win;
 	SDL_Color color = {200, 200, 190};
-	Uint32 bg = SDL_MapRGB((screen)->format, r, g, b);
+	Uint32 bg = SDL_MapRGB(screen->format, r, g, b);
 
 	win.x = ARENA_W + 10;
 	win.y = 430;
@@ -240,8 +240,8 @@ void showWinner(int nr, int tnr)
 
 	SDL_Rect fx, fx2, ip, is;
 	SDL_Color textColor = {200, 0, 0};
-	Uint32 bo = SDL_MapRGB((screen)->format, 10, 10, 10);
-	Uint32 bg = SDL_MapRGB((screen)->format, 200, 200, 200);
+	Uint32 bo = SDL_MapRGB(screen->format, 10, 10, 10);
+	Uint32 bg = SDL_MapRGB(screen->format, 200, 200, 200);
 
 	fx.x = 75;
 	fx.y = 150;
@@ -282,8 +282,8 @@ void showGoodbye(void)
 {
 	SDL_Rect fx, fx2;
 	SDL_Color textColor = {200, 0, 0};
-	Uint32 bg = SDL_MapRGB((screen)->format, 200, 200, 200);
-	Uint32 bo = SDL_MapRGB((screen)->format, 250, 0, 0);
+	Uint32 bg = SDL_MapRGB(screen->format, 200, 200, 200);
+	Uint32 bo = SDL_MapRGB(screen->format, 250, 0, 0);
 
 	fx.x = 25;
 	fx.y = 150;

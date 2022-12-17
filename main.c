@@ -699,12 +699,12 @@ int do_logic(void)
 			continue;
 		else if (isSpriteExplosion(i))
 		{
-			int r1 = sprite[i].owner;
+			int robo_own = sprite[i].owner;
 
-			if ((r1) && (sprite[r1].typ != ROC))
+			if ((robo_own) && (sprite[robo_own].typ != ROC))
 			{
-				sprite[i].x = sprite[r1].x;
-				sprite[i].y = sprite[r1].y;
+				sprite[i].x = sprite[robo_own].x;
+				sprite[i].y = sprite[robo_own].y;
 			}
 		}
 		if (isSpriteShield(i))
@@ -738,40 +738,40 @@ int do_logic(void)
 
 			for (r = 0; r < MAX_ROBOTS; r++)
 			{
-				int r1 = rob[r];
-				int o = sprite[i].owner;
+				int robo_own = rob[r];
+				int owner = sprite[i].owner;
 
-				if (o == r1)
+				if (owner == robo_own)
 					continue;
-				else if (checkSpriteCollision(i, r1))
+				else if (checkSpriteCollision(i, robo_own))
 				{
-					int e = getFreeExplosion();
+					int expl = getFreeExplosion();
 
-					if (e > 0)
+					if (expl > 0)
 					{
 						if (cfg.fx_play)
 							Mix_PlayChannel(-1, explsnd, 0);
 
 						sprite[i].visible = FALSE;
 						sprite[i].owner = 0;
-						sprite[e].x = sprite[r1].x;
-						sprite[e].y = sprite[r1].y;
-						sprite[e].visible = TRUE;
-						sprite[e].owner = r1;
-						sprite[o].bomb++;
+						sprite[expl].x = sprite[robo_own].x;
+						sprite[expl].y = sprite[robo_own].y;
+						sprite[expl].visible = TRUE;
+						sprite[expl].owner = robo_own;
+						sprite[owner].bomb++;
 
-						if (sprite[r1].life > 0)
+						if (sprite[robo_own].life > 0)
 						{
-							sprite[r1].life--;
-							sprite[o].points += PKT_BOMB;
+							sprite[robo_own].life--;
+							sprite[owner].points += PKT_BOMB;
 
-							if (sprite[r1].life == 0)
+							if (sprite[robo_own].life == 0)
 							{
-								int ra = sprite[r1].radar;
+								int ra = sprite[robo_own].radar;
 
 								if (ra)
 									sprite[ra].visible = FALSE;
-								sprite[r1].visible = FALSE;
+								sprite[robo_own].visible = FALSE;
 								status.maxclk -= 500;
 							}
 						}
@@ -785,9 +785,9 @@ int do_logic(void)
 		}
 		else if (isSpriteRocket(i))
 		{
-			int r, owner = sprite[i].owner;
+			int owner = sprite[i].owner;
 
-			for (r = 0; r < MAX_ROCKETS; r++)
+			for (int r = 0; r < MAX_ROCKETS; r++)
 			{
 				int r2 = roc[r];
 
@@ -819,24 +819,24 @@ int do_logic(void)
 				}
 			}
 
-			for (r = 0; r < MAX_ROBOTS; r++)
+			for (int r = 0; r < MAX_ROBOTS; r++)
 			{
-				int r1 = rob[r];
+				int robo_own = rob[r];
 
-				if (owner == r1)
+				if (owner == robo_own)
 					continue;
 
-				if (checkSpriteCollision(i, r1))
+				if (checkSpriteCollision(i, robo_own))
 				{
 					int e = getFreeExplosion();
 
-					if (sprite[r1].life > 0)
+					if (sprite[robo_own].life > 0)
 					{
-						if (sprite[r1].shield)
+						if (sprite[robo_own].shield)
 						{
-							if ((sprite[i].dir != sprite[r1].dir) && (sprite[r1].shcnt < 2))
+							if ((sprite[i].dir != sprite[robo_own].dir) && (sprite[robo_own].shcnt < 2))
 							{
-								sprite[r1].life--;
+								sprite[robo_own].life--;
 								sprite[owner].points += PKT_ROBOT;
 							}
 							else
@@ -844,17 +844,17 @@ int do_logic(void)
 						}
 						else
 						{
-							sprite[r1].life--;
+							sprite[robo_own].life--;
 							sprite[owner].points += PKT_ROBOT;
 						}
 
-						if (sprite[r1].life == 0)
+						if (sprite[robo_own].life == 0)
 						{
-							int ra = sprite[r1].radar;
+							int ra = sprite[robo_own].radar;
 
 							if (ra)
 								sprite[ra].visible = FALSE;
-							sprite[r1].visible = FALSE;
+							sprite[robo_own].visible = FALSE;
 							status.maxclk -= 500;
 						}
 					}
@@ -868,13 +868,13 @@ int do_logic(void)
 						if (cfg.fx_play)
 							Mix_PlayChannel(-1, explsnd, 0);
 
-						sprite[e].x = sprite[r1].x;
-						sprite[e].y = sprite[r1].y;
+						sprite[e].x = sprite[robo_own].x;
+						sprite[e].y = sprite[robo_own].y;
 						sprite[e].visible = TRUE;
-						sprite[e].owner = r1;
+						sprite[e].owner = robo_own;
 					}
 
-					printf(">>> ROBO id=%d hit ROBO id=%d (life level: %d)!\n", sprite[i].owner, r1, sprite[r1].life);
+					printf(">>> ROBO id=%d hit ROBO id=%d (life level: %d)!\n", sprite[i].owner, robo_own, sprite[robo_own].life);
 
 					break;
 				}
@@ -1537,7 +1537,7 @@ int main(int argc, char *args[])
 		return (0);
 	}
 
-	SDL_SetColorKey(screen, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB((screen)->format, 0, 0, 0));
+	SDL_SetColorKey(screen, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 0, 0));
 	SDL_SetAlpha(screen, SDL_SRCCOLORKEY | SDL_RLEACCEL | SDL_SRCALPHA, 255);
 
 	memset(sprite, 0, sizeof(sprite));
